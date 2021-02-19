@@ -1,13 +1,54 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="css/mdb.min.css">
+    <title>Firebase Tester</title>
 </head>
+
 <body>
-    <h1></h1>
-    
+    <div class="container mt-5 pt-5">
+        <h1 class="text-center mt-5">Probando notificaciones de Firebase</h1>
+        <p id="token"></p>
+    </div>
+
+
+    <script src="https://www.gstatic.com/firebasejs/8.2.6/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.6/firebase-messaging.js"></script>
+    <script>
+        firebase.initializeApp({ "messagingSenderId": "313092521954" });
+        const messaging = firebase.messaging();
+
+        function InitializeFireBaseMessaging() {
+            messaging.requestPermission().then(function () {
+                console.log("Notification Permission");
+            }).then(function (token) {
+                console.log("Token: " + token);
+                document.getElementById("token").innerHTML = token;
+            }).catch(function (reason) {
+                console.log(reason);
+            });
+        }
+
+        messaging.onMessage(function (payload) {
+            console.log("payload");
+        });
+
+        messaging.onTokenRefresh(function () {
+            messaging.getToken().then(function (newToken) {
+                console.log("New Token: " + newToken);
+            }).catch(function (reason) {
+                console.log(reason);
+            })
+        })
+
+        InitializeFireBaseMessaging();
+    </script>
+    <script src="js/firebase-messaging-sw.js"></script>
+    <script src="js/mdb.min.js"></script>
 </body>
+
 </html>
